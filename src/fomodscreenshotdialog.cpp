@@ -22,12 +22,13 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDirIterator>
 #include <QFrame>
 #include <QProxyStyle>
-#include <QPushButton>
 #include <QScreen>
 #include <QTableWidget>
 #include <QWindow>
 
 #include "scalelabel.h"
+
+using namespace Qt::StringLiterals;
 
 constexpr int kScreenshotTileWidth   = 100;
 constexpr int kScreenshotTileHeight  = 80;
@@ -52,7 +53,7 @@ public:
 };
 
 FomodScreenshotDialog::FomodScreenshotDialog(
-    QWidget* parent, std::vector<std::pair<QString, QString>> carouselImages,
+    QWidget* parent, const std::vector<std::pair<QString, QString>>& carouselImages,
     int carouselIndex)
     : QDialog(parent, Qt::FramelessWindowHint), ui(new Ui::FomodScreenshotDialog),
       m_carouselImages(carouselImages)
@@ -74,7 +75,7 @@ FomodScreenshotDialog::FomodScreenshotDialog(
   carouselList->setRowCount(1);
   carouselList->setRowHeight(0, kScreenshotTileHeight);
   carouselList->setColumnCount(0);
-  for (auto carouselImage : m_carouselImages) {
+  for (const auto& carouselImage : m_carouselImages) {
     QFrame* container   = new QFrame(carouselList);
     QVBoxLayout* layout = new QVBoxLayout(container);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -97,7 +98,7 @@ FomodScreenshotDialog::FomodScreenshotDialog(
         column, kScreenshotTileWidth +
                     (column + 1 == carouselImages.size() ? 0 : kScreenshotTileSpacing));
 
-    QTableWidgetItem* item = new QTableWidgetItem("");
+    QTableWidgetItem* item = new QTableWidgetItem(u""_s);
     carouselList->setItem(0, column, item);
     carouselList->setCellWidget(0, column, container);
   }
@@ -149,17 +150,18 @@ void FomodScreenshotDialog::selectedScreenshotChanged()
 
   ui->imageTitleLabel->setText(m_carouselImages.at(selectedColumn).first);
   ui->image->setScalableResource(m_carouselImages.at(selectedColumn).second);
-  ui->slideshowPosition->setText(QString("%1/%2").arg(
+  ui->slideshowPosition->setText(QStringLiteral("%1/%2").arg(
       QString::number(selectedColumn + 1), QString::number(m_carouselImages.size())));
 
   for (int column = 0; column < ui->carouselList->columnCount(); column++) {
     QWidget* widget        = ui->carouselList->cellWidget(0, column);
     ScaleLabel* scaleLabel = widget->findChild<ScaleLabel*>();
     if (column == selectedColumn) {
-      scaleLabel->setStyleSheet(scaleLabel->styleSheet() +
-                                "QLabel { border:2px solid white; }");
+      scaleLabel->setStyleSheet(scaleLabel->styleSheet() %
+                                "QLabel { border:2px solid white; }"_L1);
     } else {
-      scaleLabel->setStyleSheet(scaleLabel->styleSheet() + "QLabel { border:none; }");
+      scaleLabel->setStyleSheet(scaleLabel->styleSheet() %
+                                "QLabel { border:none; }"_L1);
     }
   }
 }

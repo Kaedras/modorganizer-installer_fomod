@@ -5,6 +5,7 @@
 #include <uibase/utility.h>
 
 using MOBase::Exception;
+using namespace Qt::StringLiterals;
 
 bool XmlReader::getNextElement(QString const& start)
 {
@@ -22,7 +23,7 @@ bool XmlReader::getNextElement(QString const& start)
       return true;
 
     case Invalid:
-      throw Exception("bad xml");
+      throw Exception(u"bad xml"_s);
       return false;
 
     default:
@@ -55,7 +56,7 @@ void XmlReader::finishedElement()
       return;
 
     case Invalid:
-      throw Exception("bad xml");
+      throw Exception(u"bad xml"_s);
       return;
 
     case StartElement:

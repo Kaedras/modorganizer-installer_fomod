@@ -8,7 +8,7 @@ class XmlReader : public QXmlStreamReader
 public:
   XmlReader(QIODevice* device) : QXmlStreamReader(device) {}
 
-  XmlReader(QByteArray array) : QXmlStreamReader(array) {}
+  XmlReader(const QByteArray& array) : QXmlStreamReader(array) {}
 
   /** Get the next token, ignoring comments and white space text */
   TokenType readNext()

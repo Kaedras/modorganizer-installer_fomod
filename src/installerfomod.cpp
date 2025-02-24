@@ -14,6 +14,7 @@
 #include "fomodinstallerdialog.h"
 
 using namespace MOBase;
+using namespace Qt::StringLiterals;
 
 InstallerFomod::InstallerFomod() : m_MOInfo(nullptr) {}
 
@@ -25,12 +26,12 @@ bool InstallerFomod::init(IOrganizer* moInfo)
 
 QString InstallerFomod::name() const
 {
-  return "Fomod Installer";
+  return u"Fomod Installer"_s;
 }
 
 QString InstallerFomod::author() const
 {
-  return "Tannin & thosrtanner";
+  return u"Tannin & thosrtanner"_s;
 }
 
 QString InstallerFomod::description() const
@@ -50,31 +51,31 @@ QString InstallerFomod::localizedName() const
 
 bool InstallerFomod::allowAnyFile() const
 {
-  return m_MOInfo->pluginSetting(name(), "use_any_file").toBool();
+  return m_MOInfo->pluginSetting(name(), u"use_any_file"_s).toBool();
 }
 
 bool InstallerFomod::checkDisabledMods() const
 {
-  return m_MOInfo->pluginSetting(name(), "see_disabled_mods").toBool();
+  return m_MOInfo->pluginSetting(name(), u"see_disabled_mods"_s).toBool();
 }
 
 QList<PluginSetting> InstallerFomod::settings() const
 {
   QList<PluginSetting> result;
-  result.push_back(
-      PluginSetting("prefer", "prefer this over the NCC based plugin", QVariant(true)));
-  result.push_back(PluginSetting("use_any_file",
-                                 "allow dependencies on any file, not just esp/esm",
+  result.push_back(PluginSetting(
+      u"prefer"_s, u"prefer this over the NCC based plugin"_s, QVariant(true)));
+  result.push_back(PluginSetting(u"use_any_file"_s,
+                                 u"allow dependencies on any file, not just esp/esm"_s,
                                  QVariant(false)));
-  result.push_back(PluginSetting("see_disabled_mods",
-                                 "treat disabled mods as inactive rather than missing",
-                                 QVariant(false)));
+  result.push_back(PluginSetting(
+      u"see_disabled_mods"_s, u"treat disabled mods as inactive rather than missing"_s,
+      QVariant(false)));
   return result;
 }
 
 unsigned int InstallerFomod::priority() const
 {
-  return m_MOInfo->pluginSetting(name(), "prefer").toBool() ? 110 : 90;
+  return m_MOInfo->pluginSetting(name(), u"prefer"_s).toBool() ? 110 : 90;
 }
 
 bool InstallerFomod::isManualInstaller() const
@@ -97,9 +98,9 @@ void InstallerFomod::onInstallationEnd(EInstallResult result, IModInterface* new
 }
 
 std::shared_ptr<const IFileTree>
-InstallerFomod::findFomodDirectory(std::shared_ptr<const IFileTree> tree) const
+InstallerFomod::findFomodDirectory(const std::shared_ptr<const IFileTree>& tree) const
 {
-  auto entry = tree->find("fomod", FileTreeEntry::DIRECTORY);
+  auto entry = tree->find(u"fomod"_s, FileTreeEntry::DIRECTORY);
 
   if (entry != nullptr) {
     return entry->astree();
@@ -115,36 +116,36 @@ bool InstallerFomod::isArchiveSupported(std::shared_ptr<const IFileTree> tree) c
 {
   tree = findFomodDirectory(tree);
   if (tree != nullptr) {
-    return tree->exists("ModuleConfig.xml", FileTreeEntry::FILE);
+    return tree->exists(u"ModuleConfig.xml"_s, FileTreeEntry::FILE);
   }
   return false;
 }
 
 void InstallerFomod::appendImageFiles(
     std::vector<std::shared_ptr<const FileTreeEntry>>& entries,
-    std::shared_ptr<const IFileTree> tree) const
+    const std::shared_ptr<const IFileTree>& tree) const
 {
-  static std::set<QString, FileNameComparator> imageSuffixes{"png", "jpg", "jpeg",
-                                                             "gif", "bmp"};
+  static std::set<QString, FileNameComparator> imageSuffixes{
+      u"png"_s, u"jpg"_s, u"jpeg"_s, u"gif"_s, u"bmp"_s};
   for (auto entry : *tree) {
     if (entry->isDir()) {
       appendImageFiles(entries, entry->astree());
-    } else if (imageSuffixes.count(entry->suffix()) > 0) {
+    } else if (imageSuffixes.contains(entry->suffix())) {
       entries.push_back(entry);
     }
   }
 }
 
 std::vector<std::shared_ptr<const FileTreeEntry>>
-InstallerFomod::buildFomodTree(std::shared_ptr<const IFileTree> tree) const
+InstallerFomod::buildFomodTree(const std::shared_ptr<const IFileTree>& tree) const
 {
   std::vector<std::shared_ptr<const FileTreeEntry>> entries;
 
   auto fomodTree = findFomodDirectory(tree);
 
   for (auto entry : *fomodTree) {
-    if (entry->isFile() &&
-        (entry->compare("info.xml") == 0 || entry->compare("ModuleConfig.xml") == 0)) {
+    if (entry->isFile() && (entry->compare(u"info.xml"_s) == 0 ||
+                            entry->compare(u"ModuleConfig.xml"_s) == 0)) {
       entries.push_back(entry);
     }
   }
@@ -173,7 +174,7 @@ IPluginList::PluginStates InstallerFomod::fileState(const QString& fileName) con
     // A note: The list of files produced is somewhat odd as it's the full path
     // to the originating mod (or mods). However, all we care about is if it's
     // there or not.
-    if (files.size() != 0) {
+    if (!files.empty()) {
       return IPluginList::STATE_ACTIVE;
     }
   } else {
@@ -186,7 +187,7 @@ IPluginList::PluginStates InstallerFomod::fileState(const QString& fileName) con
   if (checkDisabledMods()) {
     IModList* modList = m_MOInfo->modList();
     QStringList list  = modList->allMods();
-    for (QString mod : list) {
+    for (const QString& mod : list) {
       // Get mod state. if it's active we've already looked. If it's not valid,
       // no point in looking.
       IModList::ModStates state = modList->state(mod);

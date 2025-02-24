@@ -17,7 +17,7 @@ class FomodScreenshotDialog : public QDialog
 
 public:
   explicit FomodScreenshotDialog(
-      QWidget* parent, std::vector<std::pair<QString, QString>> carouselImages,
+      QWidget* parent, const std::vector<std::pair<QString, QString>>& carouselImages,
       int carouselIndex);
   ~FomodScreenshotDialog();
 

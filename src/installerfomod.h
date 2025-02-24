@@ -58,7 +58,7 @@ private:
    * pointer if the entry was not found.
    */
   std::shared_ptr<const MOBase::IFileTree>
-  findFomodDirectory(std::shared_ptr<const MOBase::IFileTree> tree) const;
+  findFomodDirectory(const std::shared_ptr<const MOBase::IFileTree>& tree) const;
 
   /**
    * @brief Build a list of entries that should be extracted sincce the FOMOD installer
@@ -70,17 +70,17 @@ private:
    * @return a list of file entries that need to be extracted.
    */
   std::vector<std::shared_ptr<const MOBase::FileTreeEntry>>
-  buildFomodTree(std::shared_ptr<const MOBase::IFileTree> tree) const;
+  buildFomodTree(const std::shared_ptr<const MOBase::IFileTree>& tree) const;
 
   /**
    * @brief Recurse through the given tree and add all the images to the given vector.
    *
-   * @param result Vector of entries to add the images.
+   * @param entries Vector of entries to add the images.
    * @param tree The tree to look files in.
    */
   void
   appendImageFiles(std::vector<std::shared_ptr<const MOBase::FileTreeEntry>>& entries,
-                   std::shared_ptr<const MOBase::IFileTree> tree) const;
+                   const std::shared_ptr<const MOBase::IFileTree>& tree) const;
 
   MOBase::IPluginList::PluginStates fileState(const QString& fileName) const;
 

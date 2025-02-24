@@ -26,6 +26,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QString>
 
 #include <functional>
+#include <utility>
 #include <vector>
 
 #include <uibase/guessedvalue.h>
@@ -87,9 +88,9 @@ private:
 class ConditionFlag : public Condition
 {
 public:
-  ConditionFlag() : Condition(), m_Name(), m_Value() {}
-  ConditionFlag(const QString& name, const QString& value)
-      : Condition(), m_Name(name), m_Value(value)
+  ConditionFlag() {}
+  ConditionFlag(QString name, QString value)
+      : m_Name(std::move(name)), m_Value(std::move(value))
   {}
   virtual std::pair<bool, QString> test(int maxIndex,
                                         const IConditionTester* tester) const
@@ -104,9 +105,9 @@ Q_DECLARE_METATYPE(ConditionFlag)
 class ValueCondition : public Condition
 {
 public:
-  ValueCondition() : Condition(), m_Name(), m_Value() {}
-  ValueCondition(const QString& name, const QString& value)
-      : Condition(), m_Name(name), m_Value(value)
+  ValueCondition() {}
+  ValueCondition(QString name, QString value)
+      : m_Name(std::move(name)), m_Value(std::move(value))
   {}
   virtual std::pair<bool, QString> test(int maxIndex,
                                         const IConditionTester* tester) const
@@ -121,9 +122,9 @@ Q_DECLARE_METATYPE(ValueCondition)
 class FileCondition : public Condition
 {
 public:
-  FileCondition() : Condition(), m_File(), m_State() {}
-  FileCondition(const QString& file, const QString& state)
-      : Condition(), m_File(file), m_State(state)
+  FileCondition() {}
+  FileCondition(QString file, QString state)
+      : m_File(std::move(file)), m_State(std::move(state))
   {}
   virtual std::pair<bool, QString> test(int maxIndex,
                                         const IConditionTester* tester) const
@@ -157,9 +158,9 @@ public:
     v_FOMM,
     v_FOSE
   };
-  VersionCondition() : Condition(), m_Type(), m_RequiredVersion() {}
-  VersionCondition(Type type, const QString& requiredVersion)
-      : Condition(), m_Type(type), m_RequiredVersion(requiredVersion)
+  VersionCondition() : m_Type() {}
+  VersionCondition(Type type, QString requiredVersion)
+      : m_Type(type), m_RequiredVersion(std::move(requiredVersion))
   {}
   virtual std::pair<bool, QString> test(int maxIndex,
                                         const IConditionTester* tester) const
@@ -176,8 +177,8 @@ class FileDescriptor : public QObject
   Q_OBJECT
 public:
   FileDescriptor(QObject* parent)
-      : QObject(parent), m_Source(), m_Destination(), m_Priority(0), m_IsFolder(false),
-        m_AlwaysInstall(false), m_InstallIfUsable(false), m_FileSystemItemSequence(0)
+      : QObject(parent), m_Priority(0), m_IsFolder(false), m_AlwaysInstall(false),
+        m_InstallIfUsable(false), m_FileSystemItemSequence(0)
   {}
 
   FileDescriptor(const FileDescriptor& reference)
@@ -209,9 +210,9 @@ class FomodInstallerDialog : public QDialog, public IConditionTester
 public:
   explicit FomodInstallerDialog(
       InstallerFomod* installer, const MOBase::GuessedValue<QString>& modName,
-      const QString& fomodPath,
+      QString fomodPath,
       const std::function<MOBase::IPluginList::PluginStates(const QString&)>& fileCheck,
-      QWidget* parent = 0);
+      QWidget* parent = nullptr);
   ~FomodInstallerDialog();
 
   void initData(MOBase::IOrganizer* moInfo);
@@ -410,17 +411,17 @@ private:
   bool nextPage();
   void activateCurrentPage();
 
-  void moveTree(std::shared_ptr<MOBase::IFileTree> target,
-                std::shared_ptr<MOBase::IFileTree> source,
+  void moveTree(const std::shared_ptr<MOBase::IFileTree>& target,
+                const std::shared_ptr<MOBase::IFileTree>& source,
                 MOBase::IFileTree::OverwritesType& overwrites);
 
-  void copyLeaf(std::shared_ptr<MOBase::FileTreeEntry> sourceEntry,
-                std::shared_ptr<MOBase::IFileTree> destinationTree,
+  void copyLeaf(const std::shared_ptr<MOBase::FileTreeEntry>& sourceEntry,
+                const std::shared_ptr<MOBase::IFileTree>& destinationTree,
                 QString destinationPath, MOBase::IFileTree::OverwritesType& overwrites,
                 Leaves& leaves, int pri);
 
-  bool copyFileIterator(std::shared_ptr<MOBase::IFileTree> sourceTree,
-                        std::shared_ptr<MOBase::IFileTree> destinationTree,
+  bool copyFileIterator(const std::shared_ptr<MOBase::IFileTree>& sourceTree,
+                        const std::shared_ptr<MOBase::IFileTree>& destinationTree,
                         const FileDescriptor* descriptor, Leaves& leaves,
                         MOBase::IFileTree::OverwritesType& overwrites);
 
@@ -434,7 +435,8 @@ private:
    *
    * @return true if the user chose to continue with the installation, false otherwize.
    */
-  bool displayMissingFilesDialog(std::vector<const FileDescriptor*> missingFiles);
+  bool
+  displayMissingFilesDialog(const std::vector<const FileDescriptor*>& missingFiles);
 
   static QString toString(MOBase::IPluginList::PluginStates state);
 

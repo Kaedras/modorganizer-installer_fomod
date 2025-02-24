@@ -4,8 +4,8 @@
 
 static bool isResourceMovie(const QString& path)
 {
-  for (QByteArray format : QMovie::supportedFormats()) {
-    QString fileExtension = "." + QString::fromUtf8(format);
+  for (const QByteArray& format : QMovie::supportedFormats()) {
+    QString fileExtension = '.' % QString::fromUtf8(format);
     if (path.endsWith(fileExtension)) {
       return true;
     }
