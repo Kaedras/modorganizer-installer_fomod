@@ -45,8 +45,8 @@
     </message>
     <message>
         <location filename="fomodinstallerdialog.ui" line="239"/>
-        <location filename="fomodinstallerdialog.cpp" line="1507"/>
-        <location filename="fomodinstallerdialog.cpp" line="1652"/>
+        <location filename="fomodinstallerdialog.cpp" line="1506"/>
+        <location filename="fomodinstallerdialog.cpp" line="1651"/>
         <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
@@ -177,62 +177,62 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1381"/>
+        <location filename="fomodinstallerdialog.cpp" line="1380"/>
         <source>The flag &apos;%1&apos; matched &apos;%2&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1385"/>
+        <location filename="fomodinstallerdialog.cpp" line="1384"/>
         <source>The flag &apos;%1&apos; did not match &apos;%2&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1396"/>
+        <location filename="fomodinstallerdialog.cpp" line="1395"/>
         <source>The condition was not matched and is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1397"/>
+        <location filename="fomodinstallerdialog.cpp" line="1396"/>
         <source>The value exists but was not matched.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1478"/>
+        <location filename="fomodinstallerdialog.cpp" line="1477"/>
         <source>Disabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1480"/>
+        <location filename="fomodinstallerdialog.cpp" line="1479"/>
         <source>This button is disabled because the following group(s) need a selection: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1507"/>
+        <location filename="fomodinstallerdialog.cpp" line="1506"/>
         <source>Install</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1569"/>
+        <location filename="fomodinstallerdialog.cpp" line="1568"/>
         <source>This component is required</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1575"/>
+        <location filename="fomodinstallerdialog.cpp" line="1574"/>
         <source>It is recommended you enable this component</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1581"/>
+        <location filename="fomodinstallerdialog.cpp" line="1580"/>
         <source>Optional component</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1586"/>
+        <location filename="fomodinstallerdialog.cpp" line="1585"/>
         <source>This component is not usable in combination with other installed plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="fomodinstallerdialog.cpp" line="1595"/>
+        <location filename="fomodinstallerdialog.cpp" line="1594"/>
         <source>You may be experiencing instability in combination with other installed plugins</source>
         <translation type="unfinished"></translation>
     </message>

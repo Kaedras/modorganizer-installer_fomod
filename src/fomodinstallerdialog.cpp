@@ -34,8 +34,7 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRadioButton>
 #include <QScrollArea>
 #include <QStringEncoder>
-
-#include <Shellapi.h>
+#include <QDesktopServices>
 
 #include <uibase/game_features/igamefeatures.h>
 #include <uibase/game_features/scriptextender.h>
@@ -327,7 +326,7 @@ bool FomodInstallerDialog::copyFileIterator(std::shared_ptr<IFileTree> sourceTre
                                             IFileTree::OverwritesType& overwrites)
 {
   QString source      = (m_FomodPath.length() != 0)
-                            ? (m_FomodPath + "\\" + descriptor->m_Source)
+                            ? (m_FomodPath + QDir::separator() + descriptor->m_Source)
                             : descriptor->m_Source;
   int pri             = descriptor->m_Priority;
   QString destination = descriptor->m_Destination;
@@ -1340,8 +1339,7 @@ void FomodInstallerDialog::on_cancelBtn_clicked()
 
 void FomodInstallerDialog::on_websiteLabel_linkActivated(const QString& link)
 {
-  ::ShellExecuteW(nullptr, L"open", ToWString(link).c_str(), nullptr, nullptr,
-                  SW_SHOWNORMAL);
+  QDesktopServices::openUrl(link);
 }
 
 void FomodInstallerDialog::activateCurrentPage()
