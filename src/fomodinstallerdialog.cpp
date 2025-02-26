@@ -230,7 +230,12 @@ void FomodInstallerDialog::readXml(QFile& file,
 
 void FomodInstallerDialog::readInfoXml()
 {
-  QFile file(QDir::tempPath() % '/' % m_FomodPath % "/fomod/info.xml"_L1);
+  QString path = getFomodPathCaseInsensitive(u"info.xml"_s);
+  if (path.isEmpty()) {
+    return;
+  }
+
+  QFile file(path);
 
   // We don't need a info.xml file, so we just return if we cannot open it:
   if (!file.open(QIODevice::ReadOnly)) {
@@ -241,7 +246,9 @@ void FomodInstallerDialog::readInfoXml()
 
 void FomodInstallerDialog::readModuleConfigXml()
 {
-  QFile file(QDir::tempPath() % '/' % m_FomodPath % "/fomod/ModuleConfig.xml"_L1);
+  QString path = getFomodPathCaseInsensitive(u"ModuleConfig.xml"_s);
+
+  QFile file(path);
   if (!file.open(QIODevice::ReadOnly)) {
     throw Exception(tr("%1 missing.").arg(file.fileName()));
   }
@@ -255,8 +262,7 @@ void FomodInstallerDialog::initData(IOrganizer* moInfo)
   // parse provided package information
   readInfoXml();
 
-  QString screenshotPath =
-      QDir::tempPath() % '/' % m_FomodPath % "/fomod/screenshot.png"_L1;
+  QString screenshotPath = getFomodPathCaseInsensitive(u"screenshot.png"_s);
   if (!QImage(screenshotPath).isNull()) {
     ui->screenshotLabel->setScalableResource(screenshotPath);
     ui->screenshotExpand->setVisible(false);
@@ -625,7 +631,7 @@ void FomodInstallerDialog::highlightControl(QAbstractButton* button)
     QString screenshotFileName = screenshotName.toString();
     if (!screenshotFileName.isEmpty()) {
       QString temp = QDir::tempPath() % '/' % m_FomodPath % '/' %
-                     QDir::fromNativeSeparators(screenshotFileName);
+                     screenshotFileName.replace('\\', '/');
       ui->screenshotLabel->setScalableResource(temp);
       ui->screenshotExpand->setVisible(true);
     } else {
@@ -757,9 +763,11 @@ void FomodInstallerDialog::readFileList(XmlReader& reader, FileDescriptorList& f
       } else {
         FileDescriptor* file           = new FileDescriptor(this);
         file->m_Source                 = attributes.value("source"_L1).toString();
+        file->m_Source.replace('\\', '/');
         file->m_Destination            = attributes.hasAttribute("destination"_L1)
                                              ? attributes.value("destination"_L1).toString()
                                              : file->m_Source;
+        file->m_Destination.replace('\\', '/');
         file->m_Priority               = attributes.hasAttribute("priority"_L1)
                                              ? attributes.value("priority"_L1).toString().toInt()
                                              : 0;
@@ -1619,6 +1627,29 @@ void FomodInstallerDialog::displayCurrentPage()
       }
     }
   }
+}
+
+QString FomodInstallerDialog::getFomodPathCaseInsensitive(const QString& file)
+{
+  QDir baseDir(QDir::tempPath() % '/' % m_FomodPath);
+  QStringList entryList = baseDir.entryList({"fomod"_L1}, QDir::Dirs);
+  if (entryList.size() != 1) {
+    return {};
+  }
+
+  if (file.isEmpty()) {
+    return baseDir.path() % entryList[0];
+  }
+
+  if (!baseDir.cd(entryList[0])) {
+    return {};
+  }
+  entryList = baseDir.entryList({file}, QDir::Files);
+  if (entryList.size() != 1) {
+    return {};
+  }
+
+  return baseDir.path() % '/' % entryList[0];
 }
 
 void FomodInstallerDialog::on_nextBtn_clicked()

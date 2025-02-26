@@ -446,6 +446,13 @@ private:
   // Display the current page calculating all the button enables/disables
   void displayCurrentPage();
 
+  /**
+   * @brief Gets the fomod path on case-sensitive file systems
+   * assuming a case-insensitive search will return only one result.
+   * @param file File to look for inside fomod directory
+   */
+  QString getFomodPathCaseInsensitive(const QString& file = {});
+
 private:
   Ui::FomodInstallerDialog* ui;
 
