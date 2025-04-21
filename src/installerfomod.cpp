@@ -86,6 +86,11 @@ bool InstallerFomod::isManualInstaller() const
 void InstallerFomod::onInstallationStart(QString const& archive, bool reinstallation,
                                          IModInterface* currentMod)
 {
+  // suppress compiler warnings
+  (void)archive;
+  (void)reinstallation;
+  (void)currentMod;
+
   m_InstallerUsed = false;
 }
 
@@ -212,7 +217,8 @@ InstallerFomod::install(GuessedValue<QString>& modName,
                         std::shared_ptr<IFileTree>& tree, QString& version, int& modID)
 {
   auto installerFiles = buildFomodTree(tree);
-  if (manager()->extractFiles(installerFiles).size() == installerFiles.size()) {
+  if (static_cast<size_t>(manager()->extractFiles(installerFiles).size()) ==
+      installerFiles.size()) {
     try {
       std::shared_ptr<const IFileTree> fomodTree = findFomodDirectory(tree);
 

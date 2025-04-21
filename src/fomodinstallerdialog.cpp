@@ -980,6 +980,7 @@ void FomodInstallerDialog::readPluginList(XmlReader& reader, QString const& grou
                  << " which permits selection of at most one plugin";
       groupType = TYPE_SELECTANY;
     } break;
+    default:;
     }
   }
 

@@ -95,8 +95,10 @@ FomodScreenshotDialog::FomodScreenshotDialog(
     int column = carouselList->columnCount();
     carouselList->setColumnCount(column + 1);
     carouselList->setColumnWidth(
-        column, kScreenshotTileWidth +
-                    (column + 1 == carouselImages.size() ? 0 : kScreenshotTileSpacing));
+        column,
+        kScreenshotTileWidth + (static_cast<size_t>(column) + 1 == carouselImages.size()
+                                    ? 0
+                                    : kScreenshotTileSpacing));
 
     QTableWidgetItem* item = new QTableWidgetItem(u""_s);
     carouselList->setItem(0, column, item);
@@ -131,7 +133,7 @@ void FomodScreenshotDialog::on_navigateLeft_clicked()
 void FomodScreenshotDialog::on_navigateRight_clicked()
 {
   int selectedColumn = getSelectedScreenshot();
-  if (selectedColumn == m_carouselImages.size() - 1) {
+  if (static_cast<size_t>(selectedColumn) == m_carouselImages.size() - 1) {
     return;
   }
 
