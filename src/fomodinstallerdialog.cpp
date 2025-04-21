@@ -120,12 +120,11 @@ int FomodInstallerDialog::bomOffset(const QByteArray& buffer)
 {
   static const QByteArrayView UTF16LE_BOM = QByteArrayLiteral("\xFF\xFE");
   static const QByteArrayView UTF16BE_BOM = QByteArrayLiteral("\xFE\xFF");
-  static const QByteArrayView UTF8_BOM = QByteArrayLiteral("\xEF\xBB\xBF");
+  static const QByteArrayView UTF8_BOM    = QByteArrayLiteral("\xEF\xBB\xBF");
 
   if (buffer.startsWith(UTF8_BOM))
     return 3;
-  if (buffer.startsWith(UTF16BE_BOM) ||
-      buffer.startsWith(UTF16LE_BOM))
+  if (buffer.startsWith(UTF16BE_BOM) || buffer.startsWith(UTF16LE_BOM))
     return 2;
 
   return 0;
@@ -140,10 +139,10 @@ QByteArray skipXmlHeader(QIODevice& file)
 {
   static const QByteArrayView UTF16LE_BOM = QByteArrayLiteral("\xFF\xFE");
   static const QByteArrayView UTF16BE_BOM = QByteArrayLiteral("\xFE\xFF");
-  static const QByteArrayView UTF8_BOM = QByteArrayLiteral("\xEF\xBB\xBF");
-  static const QByteArrayView UTF16LE = QByteArrayLiteral("\x3C\x00\x3F\x00");
-  static const QByteArrayView UTF16BE = QByteArrayLiteral("\x00\x3C\x00\x3F");
-  static const QByteArrayView UTF8 = QByteArrayLiteral("\x3C\x3F\x87\x6D");
+  static const QByteArrayView UTF8_BOM    = QByteArrayLiteral("\xEF\xBB\xBF");
+  static const QByteArrayView UTF16LE     = QByteArrayLiteral("\x3C\x00\x3F\x00");
+  static const QByteArrayView UTF16BE     = QByteArrayLiteral("\x00\x3C\x00\x3F");
+  static const QByteArrayView UTF8        = QByteArrayLiteral("\x3C\x3F\x87\x6D");
 
   file.seek(0);
   QByteArray rawBytes = file.read(4);
@@ -761,12 +760,12 @@ void FomodInstallerDialog::readFileList(XmlReader& reader, FileDescriptorList& f
       if (attributes.value("source"_L1).isEmpty()) {
         log::debug("Ignoring {} entry with empty source.", reader.name().toString());
       } else {
-        FileDescriptor* file           = new FileDescriptor(this);
-        file->m_Source                 = attributes.value("source"_L1).toString();
+        FileDescriptor* file = new FileDescriptor(this);
+        file->m_Source       = attributes.value("source"_L1).toString();
         file->m_Source.replace('\\', '/');
-        file->m_Destination            = attributes.hasAttribute("destination"_L1)
-                                             ? attributes.value("destination"_L1).toString()
-                                             : file->m_Source;
+        file->m_Destination = attributes.hasAttribute("destination"_L1)
+                                  ? attributes.value("destination"_L1).toString()
+                                  : file->m_Source;
         file->m_Destination.replace('\\', '/');
         file->m_Priority               = attributes.hasAttribute("priority"_L1)
                                              ? attributes.value("priority"_L1).toString().toInt()
