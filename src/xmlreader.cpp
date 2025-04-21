@@ -24,7 +24,6 @@ bool XmlReader::getNextElement(QString const& start)
 
     case Invalid:
       throw Exception(u"bad xml"_s);
-      return false;
 
     default:
       qWarning() << "Unexpected token type " << tokenString() << " at " << lineNumber();
@@ -57,7 +56,6 @@ void XmlReader::finishedElement()
 
     case Invalid:
       throw Exception(u"bad xml"_s);
-      return;
 
     case StartElement:
       unexpected();
