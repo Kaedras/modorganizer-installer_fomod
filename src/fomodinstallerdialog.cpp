@@ -34,14 +34,13 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCheckBox>
 #include <QCompleter>
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFile>
 #include <QImage>
 #include <QRadioButton>
 #include <QScrollArea>
 #include <QStringEncoder>
-
-#include <Shellapi.h>
 
 #include <array>
 #include <sstream>
@@ -1339,8 +1338,7 @@ void FomodInstallerDialog::on_cancelBtn_clicked()
 
 void FomodInstallerDialog::on_websiteLabel_linkActivated(const QString& link)
 {
-  ::ShellExecuteW(nullptr, L"open", ToWString(link).c_str(), nullptr, nullptr,
-                  SW_SHOWNORMAL);
+  QDesktopServices::openUrl(link);
 }
 
 void FomodInstallerDialog::activateCurrentPage()
