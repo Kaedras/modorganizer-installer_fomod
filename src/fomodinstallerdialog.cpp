@@ -229,7 +229,9 @@ void FomodInstallerDialog::readXml(QFile& file,
 
 void FomodInstallerDialog::readInfoXml()
 {
-  QFile file(QDir::tempPath() + "/" + m_FomodPath + "/fomod/info.xml");
+  QString path = getFomodPath("info.xml");
+
+  QFile file(path);
 
   // We don't need a info.xml file, so we just return if we cannot open it:
   if (!file.open(QIODevice::ReadOnly)) {
@@ -240,7 +242,9 @@ void FomodInstallerDialog::readInfoXml()
 
 void FomodInstallerDialog::readModuleConfigXml()
 {
-  QFile file(QDir::tempPath() + "/" + m_FomodPath + "/fomod/ModuleConfig.xml");
+  QString path = getFomodPath("ModuleConfig.xml");
+
+  QFile file(path);
   if (!file.open(QIODevice::ReadOnly)) {
     throw Exception(tr("%1 missing.").arg(file.fileName()));
   }
@@ -254,8 +258,7 @@ void FomodInstallerDialog::initData(IOrganizer* moInfo)
   // parse provided package information
   readInfoXml();
 
-  QString screenshotPath =
-      QDir::tempPath() + "/" + m_FomodPath + "/fomod/screenshot.png";
+  QString screenshotPath = getFomodPath("screenshot.png");
   if (!QImage(screenshotPath).isNull()) {
     ui->screenshotLabel->setScalableResource(screenshotPath);
     ui->screenshotExpand->setVisible(false);
@@ -325,7 +328,7 @@ bool FomodInstallerDialog::copyFileIterator(std::shared_ptr<IFileTree> sourceTre
                                             IFileTree::OverwritesType& overwrites)
 {
   QString source      = (m_FomodPath.length() != 0)
-                            ? (m_FomodPath + "\\" + descriptor->m_Source)
+                            ? (m_FomodPath + "/" + descriptor->m_Source)
                             : descriptor->m_Source;
   int pri             = descriptor->m_Priority;
   QString destination = descriptor->m_Destination;
@@ -630,7 +633,7 @@ void FomodInstallerDialog::highlightControl(QAbstractButton* button)
     QString screenshotFileName = screenshotName.toString();
     if (!screenshotFileName.isEmpty()) {
       QString temp = QDir::tempPath() + "/" + m_FomodPath + "/" +
-                     QDir::fromNativeSeparators(screenshotFileName);
+                     screenshotFileName.replace('\\', '/');
       ui->screenshotLabel->setScalableResource(temp);
       ui->screenshotExpand->setVisible(true);
     } else {
@@ -758,11 +761,13 @@ void FomodInstallerDialog::readFileList(XmlReader& reader, FileDescriptorList& f
       if (attributes.value("source").isEmpty()) {
         log::debug("Ignoring {} entry with empty source.", reader.name().toString());
       } else {
-        FileDescriptor* file           = new FileDescriptor(this);
-        file->m_Source                 = attributes.value("source").toString();
-        file->m_Destination            = attributes.hasAttribute("destination")
-                                             ? attributes.value("destination").toString()
-                                             : file->m_Source;
+        FileDescriptor* file = new FileDescriptor(this);
+        file->m_Source       = attributes.value("source").toString();
+        file->m_Source.replace('\\', '/');
+        file->m_Destination = attributes.hasAttribute("destination")
+                                  ? attributes.value("destination").toString()
+                                  : file->m_Source;
+        file->m_Destination.replace('\\', '/');
         file->m_Priority               = attributes.hasAttribute("priority")
                                              ? attributes.value("priority").toString().toInt()
                                              : 0;
