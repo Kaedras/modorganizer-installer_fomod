@@ -28,14 +28,13 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCheckBox>
 #include <QCompleter>
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFile>
 #include <QImage>
 #include <QRadioButton>
 #include <QScrollArea>
 #include <QStringEncoder>
-
-#include <Shellapi.h>
 
 #include <uibase/game_features/igamefeatures.h>
 #include <uibase/game_features/scriptextender.h>
@@ -231,7 +230,7 @@ void FomodInstallerDialog::readXml(QFile& file,
 
 void FomodInstallerDialog::readInfoXml()
 {
-  QFile file(QDir::tempPath() + "/" + m_FomodPath + "/fomod/info.xml");
+  QFile file(getFomodPath("info.xml"));
 
   // We don't need a info.xml file, so we just return if we cannot open it:
   if (!file.open(QIODevice::ReadOnly)) {
@@ -242,7 +241,7 @@ void FomodInstallerDialog::readInfoXml()
 
 void FomodInstallerDialog::readModuleConfigXml()
 {
-  QFile file(QDir::tempPath() + "/" + m_FomodPath + "/fomod/ModuleConfig.xml");
+  QFile file(getFomodPath("ModuleConfig.xml"));
   if (!file.open(QIODevice::ReadOnly)) {
     throw Exception(tr("%1 missing.").arg(file.fileName()));
   }
@@ -256,8 +255,7 @@ void FomodInstallerDialog::initData(IOrganizer* moInfo)
   // parse provided package information
   readInfoXml();
 
-  QString screenshotPath =
-      QDir::tempPath() + "/" + m_FomodPath + "/fomod/screenshot.png";
+  QString screenshotPath = getFomodPath("screenshot.png");
   if (!QImage(screenshotPath).isNull()) {
     ui->screenshotLabel->setScalableResource(screenshotPath);
     ui->screenshotExpand->setVisible(false);
@@ -327,7 +325,7 @@ bool FomodInstallerDialog::copyFileIterator(std::shared_ptr<IFileTree> sourceTre
                                             IFileTree::OverwritesType& overwrites)
 {
   QString source      = (m_FomodPath.length() != 0)
-                            ? (m_FomodPath + "\\" + descriptor->m_Source)
+                            ? (m_FomodPath + "/" + descriptor->m_Source)
                             : descriptor->m_Source;
   int pri             = descriptor->m_Priority;
   QString destination = descriptor->m_Destination;
@@ -631,8 +629,7 @@ void FomodInstallerDialog::highlightControl(QAbstractButton* button)
   if (screenshotName.isValid()) {
     QString screenshotFileName = screenshotName.toString();
     if (!screenshotFileName.isEmpty()) {
-      QString temp = QDir::tempPath() + "/" + m_FomodPath + "/" +
-                     QDir::fromNativeSeparators(screenshotFileName);
+      QString temp = getFomodPath(screenshotFileName);
       ui->screenshotLabel->setScalableResource(temp);
       ui->screenshotExpand->setVisible(true);
     } else {
@@ -1340,8 +1337,7 @@ void FomodInstallerDialog::on_cancelBtn_clicked()
 
 void FomodInstallerDialog::on_websiteLabel_linkActivated(const QString& link)
 {
-  ::ShellExecuteW(nullptr, L"open", ToWString(link).c_str(), nullptr, nullptr,
-                  SW_SHOWNORMAL);
+  QDesktopServices::openUrl(QUrl(link));
 }
 
 void FomodInstallerDialog::activateCurrentPage()
@@ -1673,8 +1669,7 @@ void FomodInstallerDialog::on_screenshotExpand_clicked()
       continue;
     }
 
-    QString temp = QDir::tempPath() + "/" + m_FomodPath + "/" +
-                   QDir::fromNativeSeparators(screenshotFileName);
+    QString temp = getFomodPath(screenshotFileName);
     carouselImages.push_back(std::pair<QString, QString>(choice->text(), temp));
 
     // Focus the screenshot carousel on the user's selected choice (or the first if

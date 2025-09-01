@@ -85,7 +85,7 @@ private:
   MOBase::IPluginList::PluginStates fileState(const QString& fileName) const;
 
 private:
-  static const unsigned int PROBLEM_IMAGETYPE_UNSUPPORTED = 1;
+  static constexpr unsigned int PROBLEM_IMAGETYPE_UNSUPPORTED = 1;
 
 private:
   MOBase::IOrganizer* m_MOInfo;

@@ -444,6 +444,15 @@ private:
   // Display the current page calculating all the button enables/disables
   void displayCurrentPage();
 
+  /**
+   * @brief Look for the fomod directory and optionally a file in it. The linux-specific
+   * implementation compensates for case-sensitive file systems.
+   * @param fileName File to look for inside the fomod directory.
+   * @return Path to the fomod directory, or if fileName was provided, a file inside it.
+   * Returns empty string on failure.
+   */
+  QString getFomodPath(const QString& fileName = {}) const noexcept;
+
 private:
   Ui::FomodInstallerDialog* ui;
 
