@@ -14,6 +14,7 @@
 #include "fomodinstallerdialog.h"
 
 using namespace MOBase;
+using std::cmp_equal;
 
 InstallerFomod::InstallerFomod() : m_MOInfo(nullptr) {}
 
@@ -210,7 +211,8 @@ InstallerFomod::install(GuessedValue<QString>& modName,
                         std::shared_ptr<IFileTree>& tree, QString& version, int& modID)
 {
   auto installerFiles = buildFomodTree(tree);
-  if (manager()->extractFiles(installerFiles).size() == installerFiles.size()) {
+  if (cmp_equal(manager()->extractFiles(installerFiles).size(),
+                installerFiles.size())) {
     try {
       std::shared_ptr<const IFileTree> fomodTree = findFomodDirectory(tree);
 

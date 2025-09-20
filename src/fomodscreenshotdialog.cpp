@@ -29,6 +29,8 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scalelabel.h"
 
+using std::cmp_equal;
+
 constexpr int kScreenshotTileWidth   = 100;
 constexpr int kScreenshotTileHeight  = 80;
 constexpr int kScreenshotTileSpacing = 16;
@@ -94,8 +96,9 @@ FomodScreenshotDialog::FomodScreenshotDialog(
     int column = carouselList->columnCount();
     carouselList->setColumnCount(column + 1);
     carouselList->setColumnWidth(
-        column, kScreenshotTileWidth +
-                    (column + 1 == carouselImages.size() ? 0 : kScreenshotTileSpacing));
+        column, kScreenshotTileWidth + (cmp_equal(column + 1, carouselImages.size())
+                                            ? 0
+                                            : kScreenshotTileSpacing));
 
     QTableWidgetItem* item = new QTableWidgetItem("");
     carouselList->setItem(0, column, item);
@@ -130,7 +133,7 @@ void FomodScreenshotDialog::on_navigateLeft_clicked()
 void FomodScreenshotDialog::on_navigateRight_clicked()
 {
   int selectedColumn = getSelectedScreenshot();
-  if (selectedColumn == m_carouselImages.size() - 1) {
+  if (cmp_equal(selectedColumn, m_carouselImages.size() - 1)) {
     return;
   }
 

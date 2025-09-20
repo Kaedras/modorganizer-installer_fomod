@@ -240,33 +240,33 @@
 <context>
     <name>InstallerFomod</name>
     <message>
-        <location filename="installerfomod.cpp" line="38"/>
+        <location filename="installerfomod.cpp" line="39"/>
         <source>Installer for xml based fomod archives.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="installerfomod.cpp" line="48"/>
+        <location filename="installerfomod.cpp" line="49"/>
         <source>Fomod Installer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="installerfomod.cpp" line="251"/>
+        <location filename="installerfomod.cpp" line="253"/>
         <source>Installation as fomod failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="installerfomod.cpp" line="276"/>
+        <location filename="installerfomod.cpp" line="278"/>
         <source>image formats not supported.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="installerfomod.cpp" line="278"/>
-        <location filename="installerfomod.cpp" line="290"/>
+        <location filename="installerfomod.cpp" line="280"/>
+        <location filename="installerfomod.cpp" line="292"/>
         <source>invalid problem key %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="installerfomod.cpp" line="286"/>
+        <location filename="installerfomod.cpp" line="288"/>
         <source>This indicates that files from dlls/imageformats are missing from your MO installation or outdated. Images in installers may not be displayed. Please re-install MO</source>
         <translation type="unfinished"></translation>
     </message>
