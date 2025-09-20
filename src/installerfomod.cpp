@@ -186,7 +186,7 @@ IPluginList::PluginStates InstallerFomod::fileState(const QString& fileName) con
   if (checkDisabledMods()) {
     IModList* modList = m_MOInfo->modList();
     QStringList list  = modList->allMods();
-    for (QString mod : list) {
+    for (const QString& mod : list) {
       // Get mod state. if it's active we've already looked. If it's not valid,
       // no point in looking.
       IModList::ModStates state = modList->state(mod);
