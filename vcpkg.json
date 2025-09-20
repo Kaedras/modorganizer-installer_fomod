@@ -8,8 +8,16 @@
   "vcpkg-configuration": {
     "default-registry": {
       "kind": "git",
-      "repository": "https://github.com/ModOrganizer2/vcpkg-registry",
-      "baseline": "8beb2e0efa9c17dd6d17bb05288dd1e40727f673"
-    }
+      "repository": "https://github.com/Microsoft/vcpkg",
+      "baseline": "294f76666c3000630d828703e675814c05a4fd43"
+    },
+    "registries": [
+      {
+      "kind": "git",
+      "repository": "https://github.com/Kaedras/vcpkg-registry",
+      "baseline": "6fa41331262c36f9812c623d46e161bf5c739a43",
+      "packages": ["mo2-*"]
+      }
+    ]
   }
 }
