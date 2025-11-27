@@ -629,7 +629,8 @@ void FomodInstallerDialog::highlightControl(QAbstractButton* button)
   if (screenshotName.isValid()) {
     QString screenshotFileName = screenshotName.toString();
     if (!screenshotFileName.isEmpty()) {
-      QString temp = getFomodPath(screenshotFileName);
+      screenshotFileName.replace('\\', '/');
+      QString temp = QDir::tempPath() + "/" + m_FomodPath + "/" + screenshotFileName;
       ui->screenshotLabel->setScalableResource(temp);
       ui->screenshotExpand->setVisible(true);
     } else {
