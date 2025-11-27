@@ -23,7 +23,7 @@ QString getFomodPathCaseInsensitive(const QString& baseDir,
       }
 
       // case-insensitive file lookup
-      QDirIterator fileIter(baseDir);
+      QDirIterator fileIter(info.absoluteFilePath());
       while (fileIter.hasNext()) {
         QFileInfo fileInfo(fileIter.nextFileInfo());
         // skip directories
@@ -38,9 +38,9 @@ QString getFomodPathCaseInsensitive(const QString& baseDir,
   }
 
   if (fileName.isEmpty()) {
-    return "fomod"_L1;
+    return baseDir % "fomod"_L1;
   }
-  return "fomod"_L1 % "/"_L1 % fileName;
+  return baseDir % "fomod"_L1 % "/"_L1 % fileName;
 }
 
 QString FomodInstallerDialog::getFomodPath(const QString& fileName) const noexcept
