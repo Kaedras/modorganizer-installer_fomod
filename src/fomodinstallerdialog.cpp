@@ -50,6 +50,16 @@ along with Mod Organizer.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace MOBase;
 
+namespace
+{
+const QByteArray UTF16LE_BOM = QByteArrayLiteral("\xFF\xFE");
+const QByteArray UTF16BE_BOM = QByteArrayLiteral("\xFE\xFF");
+const QByteArray UTF8_BOM    = QByteArrayLiteral("\xEF\xBB\xBF");
+const QByteArray UTF16LE     = QByteArrayLiteral("\x3C\x00\x3F\x00");
+const QByteArray UTF16BE     = QByteArrayLiteral("\x00\x3C\x00\x3F");
+const QByteArray UTF8        = QByteArrayLiteral("\x3C\x3F\x78\x6D");
+}  // namespace
+
 bool ControlsAscending(QAbstractButton* LHS, QAbstractButton* RHS)
 {
   return LHS->text() < RHS->text();
@@ -118,14 +128,9 @@ void FomodInstallerDialog::updateNameEdit()
 
 int FomodInstallerDialog::bomOffset(const QByteArray& buffer)
 {
-  static const unsigned char BOM_UTF8[]    = {0xEF, 0xBB, 0xBF};
-  static const unsigned char BOM_UTF16BE[] = {0xFE, 0xFF};
-  static const unsigned char BOM_UTF16LE[] = {0xFF, 0xFE};
-
-  if (buffer.startsWith(reinterpret_cast<const char*>(BOM_UTF8)))
+  if (buffer.startsWith(UTF8_BOM))
     return 3;
-  if (buffer.startsWith(reinterpret_cast<const char*>(BOM_UTF16BE)) ||
-      buffer.startsWith(reinterpret_cast<const char*>(BOM_UTF16LE)))
+  if (buffer.startsWith(UTF16BE_BOM) || buffer.startsWith(UTF16LE_BOM))
     return 2;
 
   return 0;
@@ -138,31 +143,24 @@ struct XmlParseError : std::runtime_error
 
 QByteArray skipXmlHeader(QIODevice& file)
 {
-  static const unsigned char UTF16LE_BOM[] = {0xFF, 0xFE};
-  static const unsigned char UTF16BE_BOM[] = {0xFE, 0xFF};
-  static const unsigned char UTF8_BOM[]    = {0xEF, 0xBB, 0xBF};
-  static const unsigned char UTF16LE[]     = {0x3C, 0x00, 0x3F, 0x00};
-  static const unsigned char UTF16BE[]     = {0x00, 0x3C, 0x00, 0x3F};
-  static const unsigned char UTF8[]        = {0x3C, 0x3F, 0x78, 0x6D};
-
   file.seek(0);
   QByteArray rawBytes = file.read(4);
   QTextStream stream(&file);
   int bom = 0;
-  if (rawBytes.startsWith((const char*)UTF16LE_BOM)) {
+  if (rawBytes.startsWith(UTF16LE_BOM)) {
     stream.setEncoding(QStringConverter::Encoding::Utf16LE);
     bom = 2;
-  } else if (rawBytes.startsWith((const char*)UTF16BE_BOM)) {
+  } else if (rawBytes.startsWith(UTF16BE_BOM)) {
     stream.setEncoding(QStringConverter::Encoding::Utf16BE);
     bom = 2;
-  } else if (rawBytes.startsWith((const char*)UTF8_BOM)) {
+  } else if (rawBytes.startsWith(UTF8_BOM)) {
     stream.setEncoding(QStringConverter::Encoding::Utf8);
     bom = 3;
-  } else if (rawBytes.startsWith(QByteArray((const char*)UTF16LE, 4))) {
+  } else if (rawBytes.startsWith(UTF16LE)) {
     stream.setEncoding(QStringConverter::Encoding::Utf16LE);
-  } else if (rawBytes.startsWith(QByteArray((const char*)UTF16BE, 4))) {
+  } else if (rawBytes.startsWith(UTF16BE)) {
     stream.setEncoding(QStringConverter::Encoding::Utf16BE);
-  } else if (rawBytes.startsWith(QByteArray((const char*)UTF8, 4))) {
+  } else if (rawBytes.startsWith(UTF8)) {
     stream.setEncoding(QStringConverter::Encoding::Utf8);
   }  // otherwise maybe the textstream knows the encoding?
 
